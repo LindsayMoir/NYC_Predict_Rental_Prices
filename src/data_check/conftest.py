@@ -4,11 +4,11 @@ import wandb
 
 
 def pytest_addoption(parser):
-    parser.addoption("--csv", action="store")
-    parser.addoption("--ref", action="store")
-    parser.addoption("--kl_threshold", action="store")
+    parser.addoption("--reference_artifact", action="store")
+    parser.addoption("--sample_artifact", action="store")
     parser.addoption("--min_price", action="store")
     parser.addoption("--max_price", action="store")
+    parser.addoption("--kl_threshold", action="store")
 
 
 @pytest.fixture(scope='session')
@@ -17,12 +17,14 @@ def data(request):
 
     # Download input artifact. This will also note that this script is using this
     # particular version of the artifact
-    data_path = run.use_artifact(request.config.option.csv).file()
+    data_path = run.use_artifact(request.config.option.reference_artifact).file()
 
     if data_path is None:
         pytest.fail("You must provide the --csv option on the command line")
 
     df = pd.read_csv(data_path)
+
+    wandb.finish()
 
     return df
 
@@ -33,13 +35,17 @@ def ref_data(request):
 
     # Download input artifact. This will also note that this script is using this
     # particular version of the artifact
-    data_path = run.use_artifact(request.config.option.ref).file()
+    data_path = run.use_artifact(request.config.option.reference_artifact).file()
+
+    print(data_path)
 
     if data_path is None:
         pytest.fail("You must provide the --ref option on the command line")
 
     df = pd.read_csv(data_path)
 
+    wandb.finish()
+    
     return df
 
 
@@ -52,6 +58,7 @@ def kl_threshold(request):
 
     return float(kl_threshold)
 
+
 @pytest.fixture(scope='session')
 def min_price(request):
     min_price = request.config.option.min_price
@@ -60,6 +67,7 @@ def min_price(request):
         pytest.fail("You must provide min_price")
 
     return float(min_price)
+
 
 @pytest.fixture(scope='session')
 def max_price(request):

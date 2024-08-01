@@ -67,7 +67,17 @@ def go(config: DictConfig):
             ##################
             # Implement here #
             ##################
-            pass
+            _ = mlflow.run(
+                os.path.join(hydra.utils.get_original_cwd(), "src", "data_check"),
+                "main",
+                parameters={
+                    "reference_artifact": config["etl"]["reference_dataset"],
+                    "sample_artifact": "preprocessed_data.csv:latest",
+                    "min_price": config["etl"]["min_price"],
+                    "max_price": config["etl"]["max_price"],
+                    "kl_threshold": config["data_check"]["kl_threshold"]
+                },
+            )
 
         if "data_split" in active_steps:
             ##################

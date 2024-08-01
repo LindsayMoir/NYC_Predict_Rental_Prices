@@ -5,17 +5,13 @@ entry_points:
   main:
     parameters:
 
-      csv:
-        description: Input CSV file to be tested
-        type: string
-
-      ref:
+      reference_artifact:
         description: Reference CSV file to compare the new csv to
         type: string
 
-      kl_threshold:
-        description: Threshold for the KL divergence test on the neighborhood group column
-        type: float
+      sample_artifact:
+        description: Input CSV file to be tested
+        type: string
 
       min_price:
         description: Minimum accepted price
@@ -25,4 +21,8 @@ entry_points:
         description: Maximum accepted price
         type: float
 
-    command: "pytest . -vv --csv {csv} --ref {ref} --kl_threshold {kl_threshold} --min_price {min_price} --max_price {max_price}"
+      kl_threshold:
+        description: Threshold for the KS divergence test on the neighborhood group column
+        type: float
+
+    command: "pytest . -vv --reference_artifact {reference_artifact} --sample_artifact {sample_artifact} --min_price {min_price} --max_price {max_price} --kl_threshold {kl_threshold}"
