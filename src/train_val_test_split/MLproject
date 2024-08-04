@@ -7,11 +7,8 @@ entry_points:
       input_artifact:
         description: "input dataset"
         type: string
-      train_data:
-        description: "training  dataset"
-        type: string
-      val_data:
-        description: "validation dataset"
+      trainval_data:
+        description: "training validation dataset"
         type: string
       test_data:
         description: "test dataset"
@@ -30,8 +27,7 @@ entry_points:
         type: string
     command: >-
         python run.py --input_artifact {input_artifact} \
-                      --train_data {train_data} \
-                      --val_data {val_data} \
+                      --trainval_data {trainval_data} \
                       --test_data {test_data} \
                       --test_size {test_size} \
                       --val_size {val_size} \

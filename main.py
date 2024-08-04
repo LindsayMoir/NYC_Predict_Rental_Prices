@@ -83,8 +83,7 @@ def go(config: DictConfig):
                 "main",
                 parameters={
                     "input_artifact": config["etl"]["sample_artifact"],
-                    "train_data": "train_data.csv",
-                    "val_data": "val_data.csv",
+                    "trainval_data": "trainval_data.csv",
                     "test_data": "test_data.csv",
                     "test_size": config["modeling"]["test_size"],
                     "val_size": config["modeling"]["val_size"],

@@ -29,49 +29,30 @@ def go(args):
                                                 test_size=args.test_size, 
                                                 random_state=args.random_seed, 
                                                 stratify=df[args.stratify_by])
-    
-    # Split the trainval_data into train and validation datasets using train_test_split
-    train_data, val_data = train_test_split(trainval_data, 
-                                            test_size=args.val_size, 
-                                            random_state=args.random_seed, 
-                                            stratify=trainval_data[args.stratify_by])
-    logger.info("SUCCESS: Finished splitting data")
+    logger.info("SUCCESS: Split the data into trainval and test datasets")
 
     # Save the datasets to disk
-    train_data_path = "train_data.csv"
-    val_data_path = "val_data.csv"
+    trainval_data_path = "trainval_data.csv"
     test_data_path = "test_data.csv"
-
-    train_data.to_csv(train_data_path, index=False)
-    val_data.to_csv(val_data_path, index=False)
+    trainval_data.to_csv(trainval_data_path, index=False)
     test_data.to_csv(test_data_path, index=False)
-
-    # Log train_data to wandb
-    train_artifact = wandb.Artifact(
-        name=args.train_data,
-        type="dataset",
-        description="Train dataset",
-    )
-    train_artifact.add_file(train_data_path)
-    run.log_artifact(train_artifact)
-    logger.info("SUCCESS: Logged train_data to wandb")
     
-
-    val_artifact = wandb.Artifact(
-        name=args.val_data,
+    # Log the trainval dataset to wandb
+    trainval_artifact = wandb.Artifact(
+        name=args.trainval_data,
         type="dataset",
-        description="Validation dataset"
+        description="train validation dataset"
     )
-    val_artifact.add_file(val_data_path)
-    run.log_artifact(val_artifact)
+    trainval_artifact.add_file(trainval_data_path)
+    run.log_artifact(trainval_artifact)
     logger.info("SUCCESS: Logged val_data to wandb")
 
+    # Log the test dataset to wandb
     test_artifact = wandb.Artifact(
         name=args.test_data,
         type="dataset",
         description="Test dataset",
     )
-
     test_artifact.add_file(test_data_path)
     run.log_artifact(test_artifact)
     logger.info("SUCCESS: Logged test_data to wandb")
@@ -93,16 +74,9 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--train_data", 
+        "--trainval_data", 
         type=str,
-        help="This is the train  dataset",
-        required=True
-    )
-
-    parser.add_argument(
-        "--val_data", 
-        type=str,
-        help="This is the validation  dataset",
+        help="This is the trainval  dataset",
         required=True
     )
 
