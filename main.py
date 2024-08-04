@@ -10,8 +10,9 @@ from omegaconf import DictConfig
 _steps = [
     "download",
     "basic_cleaning",
+    "eda",
     "data_check",
-    "data_split",
+    "train_val_test_split",
     "train_random_forest",
     # NOTE: We do not include this in the steps so it is not run by mistake.
     # You first need to promote a model export to "prod" before you can run this,
@@ -64,9 +65,6 @@ def go(config: DictConfig):
             )
 
         if "data_check" in active_steps:
-            ##################
-            # Implement here #
-            ##################
             _ = mlflow.run(
                 os.path.join(hydra.utils.get_original_cwd(), "src", "data_check"),
                 "main",
@@ -79,11 +77,21 @@ def go(config: DictConfig):
                 },
             )
 
-        if "data_split" in active_steps:
-            ##################
-            # Implement here #
-            ##################
-            pass
+        if "train_val_test_split" in active_steps:
+            _ = mlflow.run(
+                os.path.join(hydra.utils.get_original_cwd(), "src", "train_val_test_split"),
+                "main",
+                parameters={
+                    "input_artifact": config["etl"]["sample_artifact"],
+                    "train_data": "train_data.csv",
+                    "val_data": "val_data.csv",
+                    "test_data": "test_data.csv",
+                    "test_size": config["modeling"]["test_size"],
+                    "val_size": config["modeling"]["val_size"],
+                    "random_seed": config["modeling"]["random_seed"],
+                    "stratify_by": config["modeling"]["stratify_by"]
+                },
+            )
 
         if "train_random_forest" in active_steps:
 

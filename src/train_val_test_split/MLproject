@@ -1,0 +1,39 @@
+name: train_val_test_split
+conda_env: conda.yml
+
+entry_points:
+  main:
+    parameters:
+      input_artifact:
+        description: "input dataset"
+        type: string
+      train_data:
+        description: "training  dataset"
+        type: string
+      val_data:
+        description: "validation dataset"
+        type: string
+      test_data:
+        description: "test dataset"
+        type: string
+      test_size:
+        description: "size of the test dataset"
+        type: float
+      val_size:
+        description: "size of the validation dataset"
+        type: float
+      random_seed:
+        description: "initial random seed"
+        type: int
+      stratify_by:
+        description: "stratify by this column"
+        type: string
+    command: >-
+        python run.py --input_artifact {input_artifact} \
+                      --train_data {train_data} \
+                      --val_data {val_data} \
+                      --test_data {test_data} \
+                      --test_size {test_size} \
+                      --val_size {val_size} \
+                      --random_seed {random_seed} \
+                      --stratify_by {stratify_by}
