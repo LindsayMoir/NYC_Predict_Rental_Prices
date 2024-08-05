@@ -82,7 +82,7 @@ def go(config: DictConfig):
                 os.path.join(hydra.utils.get_original_cwd(), "src", "train_val_test_split"),
                 "main",
                 parameters={
-                    "input_artifact": config["etl"]["sample_artifact"],
+                    "input_artifact": config["etl"]["cleaned_data"],
                     "trainval_data": "trainval_data.csv",
                     "test_data": "test_data.csv",
                     "test_size": config["modeling"]["test_size"],
@@ -99,12 +99,19 @@ def go(config: DictConfig):
             with open(rf_config, "w+") as fp:
                 json.dump(dict(config["modeling"]["random_forest"].items()), fp)  # DO NOT TOUCH
 
-            # NOTE: use the rf_config we just created as the rf_config parameter for the train_random_forest
-            # step
-
-            ##################
-            # Implement here #
-            ##################
+            _ = mlflow.run(
+                os.path.join(hydra.utils.get_original_cwd(), "src", "train_random_forest"),
+                "main",
+                parameters={
+                    "trainval_artifact": "trainval_data.csv:latest",
+                    "output_artifact": "random_forest_model",
+                    "random_seed": config["modeling"]["random_seed"],
+                    "rf_config": rf_config,
+                    "val_size": config["modeling"]["val_size"],
+                    "stratify_by": config["modeling"]["stratify_by"],
+                    "max_tfidf_features": config["modeling"]["max_tfidf_features"]
+                },
+            )
 
             pass
 

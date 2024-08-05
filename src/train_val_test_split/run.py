@@ -45,7 +45,7 @@ def go(args):
     )
     trainval_artifact.add_file(trainval_data_path)
     run.log_artifact(trainval_artifact)
-    logger.info("SUCCESS: Logged val_data to wandb")
+    logger.info("SUCCESS: Logged trainval_data to wandb")
 
     # Log the test dataset to wandb
     test_artifact = wandb.Artifact(
