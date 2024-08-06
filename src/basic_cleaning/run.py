@@ -22,11 +22,17 @@ def go(args):
     artifact_local_path = run.use_artifact(args.input_artifact).file()
     df = pd.read_csv(artifact_local_path)
 
-    # Drop outliers
-    logger.info("Shape before drop, %s", df.shape)
+    # Drop price outliers
+    logger.info("Shape before min max price drop, %s", df.shape)
     idx = df['price'].between(args.min_price, args.max_price)
     df = df[idx].copy()
-    logger.info("Shape after drop, %s", df.shape)
+    logger.info("Shape after min max price drop, %s", df.shape)
+
+    # Drop the longitude and latitude outliers
+    logger.info("Shape before lat long drop, %s", df.shape)
+    idx = df['longitude'].between(-74.25, -73.50) & df['latitude'].between(40.5, 41.2)
+    df = df[idx].copy()
+    logger.info("Shape after lat long drop, %s", df.shape)
 
     # Convert last_review to datetime
     df['last_review'] = pd.to_datetime(df['last_review'])

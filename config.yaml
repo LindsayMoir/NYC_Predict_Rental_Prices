@@ -8,7 +8,6 @@ main:
 etl:
   reference_dataset: "cleaned_data.csv:reference"
   sample: "sample1.csv"
-  sample2: "sample2.csv:latest"
   cleaned_data: "cleaned_data.csv:latest"
   test_dataset: "test_data.csv:latest"
   min_price: 10 # dollars
